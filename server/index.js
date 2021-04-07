@@ -6,6 +6,7 @@ const session = require('express-session');
 
 const app = express();
 const {SESSION_SECRET, SERVER_PORT, CONNECTION_STRING} = process.env 
+const auth = require('./controllers/userController');
 
 app.use(express.json())
 app.use(session({
@@ -28,7 +29,10 @@ massive({
   console.log("The db is connected!!!!!!!!");
 })
 
-
+app.post(`/auth/register`, auth.emailMiddleware, auth.register);
+app.post(`/auth/login`, auth.login);
+app.post(`/auth/logout`, auth.logout);
+app.get(`/auth/user`, auth.getUserSession);
 
 app.listen(SERVER_PORT, () => console.log(`The server is listening on ${SERVER_PORT}!`));
 
